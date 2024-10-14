@@ -11,7 +11,6 @@ const Heading = styled.h1`
   ${(props) =>
     props.as === "h3" &&
     css`
-      background-color: #00ff37;
       font-weight: 600;
       font-size: 15px;
     `}
