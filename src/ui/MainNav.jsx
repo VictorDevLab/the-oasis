@@ -1,12 +1,17 @@
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { HiOutlineHome } from "react-icons/hi2";
 
 const NavList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
 `;
-
-const Link = styled.a`
+{
+  /* when we use navlink react router will automatically place the active class on link currently active */
+}
+//little trick for styling third party elements
+const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {
     display: flex;
@@ -44,3 +49,23 @@ const Link = styled.a`
     color: var(--color-brand-600);
   }
 `;
+
+function MainNav() {
+  return (
+    <nav>
+      <NavList>
+        <li>
+          {/* when we use navlink react router will automatically place the active class on link currently active */}
+          <StyledNavLink to="/dashboard">
+            <HiOutlineHome /> <span> Home</span>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to="/bookings">Bookings</StyledNavLink>
+        </li>
+      </NavList>
+    </nav>
+  );
+}
+
+export default MainNav;
