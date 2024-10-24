@@ -43,16 +43,16 @@ function CabinTable() {
     // role is to make the html more semantic
     <Table role="table">
       <TableHeader role="row">
-        <div></div>
+        <div>Image</div>
         <div>Cabin</div>
         <div>capacity</div>
         <div>Price</div>
         <div>Discount</div>
         <div></div>
       </TableHeader>
-      {cabins.map((cabin) => {
-        <CabinRow cabin={cabin} key={cabin.id} />;
-      })}
+      {cabins.map((cabin) => (
+        <CabinRow cabin={cabin} key={cabin.id} />
+      ))}
     </Table>
   );
 }
