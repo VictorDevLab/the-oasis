@@ -13,6 +13,8 @@ const StyledAppLayout = styled.div`
 const Main = styled.main`
   background-color: var(--color-grey-50);
   padding: 4rem 4.8rem 6.4rem;
+  //only main part should scroll, rest remain fixed
+  overflow: scroll
 `;
 const Container = styled.div`
   max-width: 120rem;

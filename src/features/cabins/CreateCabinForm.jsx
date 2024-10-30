@@ -47,42 +47,80 @@ const Error = styled.span`
 `;
 
 function CreateCabinForm() {
-  
-  const { register, handleSubmit, reset} = useForm();
+  const { register, handleSubmit, reset, getValues, formState } = useForm();
+  const { errors } = formState;
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading: isCreating} = useMutation({
+  const { mutate, isLoading: isCreating } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
       toast.success("New cabin Successfully added!"),
         queryClient.invalidateQueries({
           queryKey: ["cabins"],
         });
-        reset()
+      reset();
     },
-    onError: (err) => toast.error(err.message)
+    onError: (err) => toast.error(err.message),
   });
 
   //own submit function
   function onSubmit(data) {
     mutate(data);
   }
+
+  function onError(err) {
+    console.log(err);
+  }
+  //whenever you need to refactor this from you can follow the steps in 354
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    //onError function gets called when the onSubmit is not called
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" {...register("name")} />
+        <Input
+          type="text"
+          id="name"
+          disabled={isCreating}
+          {...register("name", { required: "This Field Is Required!" })}
+        />
+        {errors?.name?.message && <Error>{errors.name.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+        <Input
+          type="number"
+          id="maxCapacity"
+          disabled={isCreating}
+          {...register("maxCapacity", {
+            required: "This Field Is Required!",
+            min: {
+              value: 1,
+              message: "A cabin should hold at least one guest",
+            },
+          })}
+        />
+        {errors?.maxCapacity?.message && (
+          <Error>{errors.maxCapacity.message}</Error>
+        )}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" {...register("regularPrice")} />
+        <Input
+          type="number"
+          id="regularPrice"
+          disabled={isCreating}
+          {...register("regularPrice", {
+            required: "This Field Is Required!",
+            min: {
+              value: 1,
+              message: "Price cannot be less than 1",
+            },
+          })}
+        />
+        {errors?.regularPrice?.message && <Error>{errors.regularPrice.message}</Error>}
       </FormRow>
 
       <FormRow>
@@ -90,9 +128,18 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="discount"
+          disabled={isCreating}
           defaultValue={0}
-          {...register("discount")}
+          {...register("discount", {
+            required: "This Field Is Required!",
+            //our own function actually
+            validate: (value) =>
+              //these are strings so convert them to a number
+              +value <= +getValues().regularPrice ||
+              "Discount should be less than the regular price!",
+          })}
         />
+        {errors?.discount?.message && <Error>{errors.discount.message}</Error>}
       </FormRow>
 
       <FormRow>
@@ -100,9 +147,15 @@ function CreateCabinForm() {
         <Textarea
           type="number"
           id="description"
+          disabled={isCreating}
           defaultValue=""
-          {...register("description")}
+          {...register("description", {
+            required: "This Field Is Required!",
+          })}
         />
+        {errors?.description?.message && (
+          <Error>{errors.description.message}</Error>
+        )}
       </FormRow>
 
       <FormRow>
