@@ -66,7 +66,8 @@ function CreateCabinForm() {
 
   //own submit function
   function onSubmit(data) {
-    mutate({...data, image: data.image.at(0)});
+    //image is an array
+    mutate({...data, image: data.image[0]});
   }
 
   function onError(err) {
