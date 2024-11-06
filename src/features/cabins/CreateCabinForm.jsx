@@ -82,8 +82,15 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   const isWorking = isCreating || isEditing;
   //own submit function
   function onSubmit(data) {
-    //image is an array
-    mutate({ ...data, image: data.image[0] });
+    //const image = typeof data.image === "string" ? data.image : data.image[0];
+    let image =
+      typeof data.image === "object" && data.image.length > 0
+        ? data.image[0]
+        : data.image;
+
+    if (isEditingSession)
+      editCabin({ newCabinData: { ...data, image }, id: editedId });
+    else createCabin({ ...data, image });
   }
 
   function onError(err) {
@@ -183,9 +190,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           id="image"
           type="file"
           accept="image/*"
-          {...register("image", {
-            required: isEditing ? false : "This Field Is Required!",
-          })}
+          {...register("image")}
         />
       </FormRow>
 
@@ -195,7 +200,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           Cancel
         </Button>
         <Button disabled={isWorking}>
-          {isEditing ? "Edit cabin" : "Create Cabin"}
+          {isEditingSession ? "Edit cabin" : "Create Cabin"}
         </Button>
       </FormRow>
     </Form>
