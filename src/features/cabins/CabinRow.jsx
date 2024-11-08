@@ -61,7 +61,7 @@ function CabinRow({ cabin }) {
     discount,
     image,
   } = cabin;
-
+//Abstract react query into custom hooks--> Next phase implementation.(357)
   const { isLoading: isDeleting, mutate } = useMutation({
     mutationFn: deleteCabin,
     onSuccess: () => {
@@ -79,7 +79,9 @@ function CabinRow({ cabin }) {
       <Cabin>{name}</Cabin>
       <div>fits up to {maxCapacity} guests</div>
       <Price>{formatCurrency(regularPrice)}</Price>
-      <Discount>{formatCurrency(discount)}</Discount>
+      {
+        discount ?  <Discount>{formatCurrency(discount)}</Discount> : <span>-</span>
+      }
       <div>
         <button onClick={()=> setShowForm((show) => !show)}>Edit</button>
 

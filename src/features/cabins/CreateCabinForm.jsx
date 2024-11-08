@@ -48,6 +48,7 @@ const Error = styled.span`
 function CreateCabinForm({ cabinToEdit = {} }) {
   const { id: editedId, ...editValues } = cabinToEdit;
   const isEditingSession = Boolean(editedId);
+
   const { register, handleSubmit, reset, getValues, formState } = useForm({
     defaultValues: isEditingSession ? editValues : {},
   });
@@ -74,7 +75,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         queryClient.invalidateQueries({
           queryKey: ["cabins"],
         });
-      reset();
+      reset(getValues());
     },
     onError: (err) => toast.error(err.message),
   });
@@ -89,7 +90,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         : data.image;
 
     if (isEditingSession)
-      editCabin({ newCabinData: { ...data, image }, id: editedId });
+      editCabin({ newCabinData: { ...data, image }, id: editedId }, {onSuccess: () =>   reset()});
     else createCabin({ ...data, image });
   }
 
